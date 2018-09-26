@@ -26,3 +26,8 @@ class HomePageTest(TestCase):
         self.assertEqual(new_item.text, 'A new list item')
 
         self.assertIn('A new list item', response.content.decode())
+
+    def test_home_page_only_saves_item_when_necessary(self):
+        csrf_client = Client()
+        csrf_client.post('/', data={'new_item_text': ''})
+        self.assertEqual(Item.objects.count(), 0)

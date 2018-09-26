@@ -8,9 +8,10 @@ from .models import Item
 def home_page(request):
     new_item_text = request.POST.get('new_item_text', '')
 
-    new_item = Item.objects.create(text=new_item_text)
-    new_item.save()
+    if request.method == 'POST' and new_item_text:
+        new_item = Item.objects.create(text=new_item_text)
+        new_item.save()
 
     return render(request, 'home.html', {
-        'new_item_text': new_item.text
+        'new_item_text': new_item_text
     })
