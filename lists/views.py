@@ -13,4 +13,8 @@ def home_page(request):
         new_item.save()
         return redirect('/')
 
-    return render(request, 'home.html')
+    data = {
+        'items': Item.objects.all(),
+    }
+
+    return render(request, 'home.html', data)

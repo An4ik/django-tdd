@@ -21,7 +21,6 @@ class HomePageTest(TestCase):
 
     def test_home_page_can_save_POST_request(self):
         self.csrf_client.post('/', data={'new_item_text': 'A new list item'})
-
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new list item')
@@ -34,3 +33,12 @@ class HomePageTest(TestCase):
     def test_home_page_only_saves_item_when_necessary(self):
         self.csrf_client.post('/', data={'new_item_text': ''})
         self.assertEqual(Item.objects.count(), 0)
+
+    def test_home_page_displays_all_list_items(self):
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = self.csrf_client.get('/')
+
+        self.assertIn('itemey 1', response.content.decode())
+        self.assertIn('itemey 2', response.content.decode())
